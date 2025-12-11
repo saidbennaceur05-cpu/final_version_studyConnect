@@ -5,9 +5,9 @@ import {
   createCalendarEventForMeeting,
   deleteGoogleEventWithFallback,
   updateGoogleEvent,
-} from '../calendar.ts';
-import { validate } from '../middlewares/validate.ts';
-import { CreateMeetingSchema, PatchMeetingSchema } from '../validation/meeting.ts';
+} from '../calendar.js';
+import { validate } from '../middlewares/validate.js';
+import { CreateMeetingSchema, PatchMeetingSchema } from '../validation/meeting.js';
 
 const prisma = new PrismaClient();
 const r = Router();

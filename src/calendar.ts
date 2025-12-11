@@ -1,7 +1,8 @@
 // src/calandrie.ts
-import { google } from 'googleapis';
+import { google, calendar_v3 } from 'googleapis';
 import type { User } from '@prisma/client';
-import { deleteGoogleEventByQuery } from './calendar-fallback.ts'; // <- TS/ESM import
+import { v4 as uuidv4 } from 'uuid';
+import { deleteGoogleEventByQuery } from './calendar-fallback.js';
 
 /** Build an OAuth2 client from a user's refresh token */
 function makeOAuth2Client(refreshToken: string) {
@@ -16,7 +17,7 @@ function makeOAuth2Client(refreshToken: string) {
 
 /**
  * Create a Google Calendar event for a meeting.
- * Returns the Google event id (string) or null if no refresh token / failure.
+ * Returns the Google event id (string) or null if no refresh token or failure.
  */
 export async function createCalendarEventForMeeting(params: {
   creator: User;
@@ -25,7 +26,8 @@ export async function createCalendarEventForMeeting(params: {
   start: Date;
   end: Date;
   location?: string | null;
-  onlineUrl?: string | null; // (not used here; add Meet links yourself if needed)
+  onlineUrl?: string | null;      // optional custom link
+  attendeeEmails?: string[];      // optional list of emails
 }): Promise<string | null> {
   if (!params.creator?.refreshToken) return null;
 
@@ -34,26 +36,38 @@ export async function createCalendarEventForMeeting(params: {
     auth: makeOAuth2Client(params.creator.refreshToken),
   });
 
-  const event = {
+  const attendees: calendar_v3.Schema$EventAttendee[] | undefined =
+    params.attendeeEmails && params.attendeeEmails.length > 0
+      ? params.attendeeEmails.map(email => ({ email }))
+      : undefined;
+
+  const event: calendar_v3.Schema$Event = {
     summary: params.title,
     description: params.description || undefined,
-    location: params.location || undefined,
+    // keep custom link in location if you want
+    location: params.onlineUrl || params.location || undefined,
     start: { dateTime: params.start.toISOString() },
     end: { dateTime: params.end.toISOString() },
-    // If you want Google Meet links later: set conferenceData + supportsConferenceData
+    attendees,
+    conferenceData: {
+      createRequest: {
+        requestId: uuidv4(),
+        conferenceSolutionKey: { type: 'hangoutsMeet' },
+      },
+    },
   };
 
   const res = await calendar.events.insert({
     calendarId: 'primary',
     requestBody: event,
+    conferenceDataVersion: 1,
   });
 
   return res.data.id || null;
 }
 
 /**
- * Update a Google Calendar event (title/desc/location/time).
- * No-op if token/eventId invalid; throws only on unexpected errors.
+ * Update a Google Calendar event (title, description, location, time).
  */
 export async function updateGoogleEvent(
   refreshToken: string,
@@ -71,7 +85,7 @@ export async function updateGoogleEvent(
     auth: makeOAuth2Client(refreshToken),
   });
 
-  const body: any = {};
+  const body: calendar_v3.Schema$Event = {};
   if (fields.summary) body.summary = fields.summary;
   if (fields.description !== undefined) body.description = fields.description || undefined;
   if (fields.location !== undefined) body.location = fields.location || undefined;
@@ -86,14 +100,13 @@ export async function updateGoogleEvent(
       sendUpdates: 'all',
     });
   } catch (e: any) {
-    // Treat not found/gone as ignorable
     if (e?.code !== 404 && e?.code !== 410) throw e;
   }
 }
 
 /**
  * Delete a Google Calendar event by exact eventId.
- * Ignores 404/410 (already gone).
+ * Ignores 404 and 410.
  */
 export async function deleteGoogleEvent(
   refreshToken: string,
@@ -112,16 +125,12 @@ export async function deleteGoogleEvent(
       sendUpdates: options?.sendUpdates ?? 'all',
     });
   } catch (e: any) {
-    // treat not found/gone as success
     if (e?.code !== 404 && e?.code !== 410) throw e;
   }
 }
 
 /**
- * Best-effort cleanup helper:
- * - If googleEventId exists → delete by id.
- * - Else → delete by query (title within ±windowMinutes around start/end).
- * Never throws (errors are swallowed).
+ * Best effort cleanup helper.
  */
 export async function deleteGoogleEventWithFallback(params: {
   creator: User;
@@ -149,6 +158,6 @@ export async function deleteGoogleEventWithFallback(params: {
       timeMax,
     });
   } catch {
-    // swallow on purpose; calendar cleanup must not block DB deletion
+    // ignore cleanup errors
   }
 }

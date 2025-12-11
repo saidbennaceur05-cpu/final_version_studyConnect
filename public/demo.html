@@ -14,7 +14,7 @@
     html,body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol", sans-serif; }
     .glass { backdrop-filter: saturate(180%) blur(8px); background: rgba(255,255,255,.75); }
     .icon { width:18px; height:18px; }
-    .btn-primary { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:.5rem; font-weight:600; background:#4f46e5; color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.06); transition:filter .15s, transform .02s; }
+    .btn-primary { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:.5rem; font-weight:600; background:#4f46e5; color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.06); transition:filter .15s, transform .02s; position:relative; }
     .btn-primary:hover { background:#4338ca; }
     .btn-primary:active { transform:translateY(1px); }
     .btn-primary.is-loading { pointer-events:none; opacity:.85; }
@@ -225,10 +225,10 @@
         <label class="text-sm">Specialization
           <input name="specialization" class="w-full mt-1 rounded-md border-gray-200" placeholder="e.g. ISI, ALG"/>
         </label>
-    <label class="text-sm">Start
-  <input name="startTime" type="datetime-local" required class="w-full mt-1 rounded-md border-gray-200"/>
-  <span class="hint">Meeting will last 1 hour by default</span>
-</label>
+        <label class="text-sm">Start
+          <input name="startTime" type="datetime-local" required class="w-full mt-1 rounded-md border-gray-200"/>
+          <span class="hint">Meeting will last 1 hour by default</span>
+        </label>
         <label class="text-sm md:col-span-2">Location
           <input id="fLocation" name="location" class="w-full mt-1 rounded-md border-gray-200" placeholder="Room or place"/>
           <span class="hint">Example B-205 Library</span>
@@ -267,25 +267,27 @@
     let currentUser = null;
     let raw = [];
 
+    // secure auth check
+    async function checkAuth() {
+      const res = await fetch('/auth/me', { credentials: 'include' });
+
+      if (res.status === 200) {
+        currentUser = await res.json().catch(() => null);
+        qs('#signinBar').classList.add('hidden');
+        return true;
+      }
+
+      currentUser = null;
+      window.location.href = '/auth.html';
+      return false;
+    }
+
     // open modal + autofocus title
     qs('#btnCreateTop').onclick  = () => { modalCreate.showModal(); setTimeout(()=>qs('#fTitle')?.focus(), 40); };
     qs('#btnCreateHero').onclick = () => { modalCreate.showModal(); setTimeout(()=>qs('#fTitle')?.focus(), 40); };
 
     // Esc to close modal
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modalCreate.open) modalCreate.close(); });
-
-    async function checkAuth() {
-      const res = await fetch('/auth/me', { credentials: 'include' });
-      if (res.status === 200) {
-        currentUser = await res.json().catch(() => null);
-        qs('#signinBar').classList.add('hidden');
-        return true;
-      } else {
-        currentUser = null;
-        qs('#signinBar').classList.remove('hidden');
-        return false;
-      }
-    }
 
     function fmtDate(dt) {
       const d = new Date(dt);
@@ -325,9 +327,19 @@
       const joined = userJoined(m);
       const owner  = isOwner(m);
 
-      const btnLabel = owner ? 'Your Meeting' : (joined ? 'Joined ✓' : 'Join Meeting');
-      const btnClass = owner ? 'btn-soft btn-disabled' : (joined ? 'btn-soft btn-disabled' : 'btn-soft');
-      const btnAttr  = owner ? 'disabled' : (joined ? 'disabled' : `data-join-id="${m.id}"`);
+      const actionsHtml = owner
+        ? `
+          <button class="btn-soft btn-disabled" disabled>Your Meeting</button>
+          <button
+            class="btn-outline text-red-600 border-red-200 hover:border-red-400"
+            data-delete-id="${m.id}"
+          >
+            Delete
+          </button>
+        `
+        : `<button class="btn-soft ${joined ? 'btn-disabled' : ''}" ${joined ? 'disabled' : `data-join-id="${m.id}"`}>
+             ${joined ? 'Joined ✓' : 'Join Meeting'}
+           </button>`;
 
       return `
       <div class="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 flex flex-col">
@@ -352,7 +364,9 @@
 
         <div class="mt-5 flex items-center justify-between">
           <div class="text-xs text-gray-500">${(m.attendees?.length ?? 0)} attending</div>
-          <button class="${btnClass}" ${btnAttr}>${btnLabel}</button>
+          <div class="flex items-center gap-2">
+            ${actionsHtml}
+          </div>
         </div>
       </div>`;
     }
@@ -436,18 +450,57 @@
         if (m) openGCalTemplate(m);
 
         await fetchMeetings();
+        await fetchStats();
       } finally {
         btn?.classList.remove('btn-disabled');
         btn?.removeAttribute('disabled');
       }
     }
 
-    // Click handler for join buttons
+    async function deleteMeeting(id) {
+      if (!confirm('Delete this meeting for everyone?')) return;
+
+      try {
+        const res = await fetch(`/api/meetings/${id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        if (res.status === 401) {
+          location.href = '/auth/google';
+          return;
+        }
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          toast('Delete failed','err');
+          alert('Delete failed. ' + text);
+          return;
+        }
+
+        toast('Meeting deleted','ok');
+        await fetchMeetings();
+        await fetchStats();
+      } catch (e) {
+        toast('Delete failed','err');
+      }
+    }
+
+    // global click handler for join + delete
     document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-join-id]');
-      if (!btn) return;
-      const id = btn.getAttribute('data-join-id');
-      if (id) joinMeeting(id);
+      const joinBtn = e.target.closest('[data-join-id]');
+      if (joinBtn) {
+        const id = joinBtn.getAttribute('data-join-id');
+        if (id) joinMeeting(id);
+        return;
+      }
+
+      const delBtn = e.target.closest('[data-delete-id]');
+      if (delBtn) {
+        const id = delBtn.getAttribute('data-delete-id');
+        if (id) deleteMeeting(id);
+        return;
+      }
     });
 
     // tiny utils
@@ -458,6 +511,19 @@
     }
     function isUrl(s){ if(!s) return false; try{ new URL(s); return true } catch { return false } }
 
+    // Stats
+    async function fetchStats() {
+      try {
+        const r = await fetch('/api/stats', { credentials: 'include' });
+        const s = await r.json();
+        const n = x => (x >= 1000 ? x.toLocaleString() : String(x));
+        document.getElementById('statActive').textContent   = n(s.activeUsers24h);
+        document.getElementById('statUpcoming').textContent = n(s.upcomingMeetings);
+        document.getElementById('statSubjects').textContent = n(s.subjectsCount);
+        document.getElementById('statUsers').textContent    = n(s.totalUsers);
+      } catch {}
+    }
+
     // Create meeting with spinner + validation
     createForm.onsubmit = async (e) => {
       e.preventDefault();
@@ -465,20 +531,16 @@
       const fd = new FormData(createForm);
       const payload = Object.fromEntries(fd.entries());
 
-      // simple validation: if onlineUrl is present it must be a URL
       if (payload.onlineUrl && !isUrl(payload.onlineUrl.trim())) {
         toast('Please enter a valid online link','err'); return;
       }
 
-      // convert startTime and calculate endTime automatically (default 1 hour)
-if (payload.startTime) {
-  const start = new Date(payload.startTime);
-  const end = new Date(start.getTime() + 60 * 60 * 1000); // 60 minutes
-
-  payload.startTime = start.toISOString();
-  payload.endTime = end.toISOString();
-}
-
+      if (payload.startTime) {
+        const start = new Date(payload.startTime);
+        const end = new Date(start.getTime() + 60 * 60 * 1000);
+        payload.startTime = start.toISOString();
+        payload.endTime = end.toISOString();
+      }
 
       submitBtn.classList.add('is-loading');
 
@@ -495,6 +557,7 @@ if (payload.startTime) {
           createForm.reset();
           toast('Meeting created','ok');
           await fetchMeetings();
+          await fetchStats();
         } else if (res.status === 400) {
           const j = await res.json().catch(()=>null);
           toast('Validation failed','err');
@@ -512,43 +575,15 @@ if (payload.startTime) {
       }
     };
 
-    // Stats
-    async function fetchStats() {
-      try {
-        const r = await fetch('/api/stats', { credentials: 'include' });
-        const s = await r.json();
-        const n = x => (x >= 1000 ? x.toLocaleString() : String(x));
-        document.getElementById('statActive').textContent   = n(s.activeUsers24h);
-        document.getElementById('statUpcoming').textContent = n(s.upcomingMeetings);
-        document.getElementById('statSubjects').textContent = n(s.subjectsCount);
-        document.getElementById('statUsers').textContent    = n(s.totalUsers);
-      } catch {}
-    }
-
     // Filters & search
     [searchInput,fLevel,fSubject,fType].forEach(el=>el?.addEventListener('input', applyFilters));
 
-    // Single init
+    // init
     (async function init(){
       await checkAuth();
       await Promise.all([fetchMeetings(), fetchStats()]);
       setInterval(fetchStats, 60_000);
     })();
-    async function checkAuth() {
-  const res = await fetch('/auth/me', { credentials: 'include' });
-
-  if (res.status === 200) {
-    currentUser = await res.json().catch(() => null);
-    qs('#signinBar').classList.add('hidden');
-    return true;
-  }
-
-  // not logged in -> send to auth page
-  currentUser = null;
-  window.location.href = '/auth.html';
-  return false;
-}
-
   </script>
 
 </body>
