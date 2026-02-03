@@ -12,6 +12,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.18.0",
     "@quixo3/prisma-session-store": "^3.1.13",
     "body-parser": "^1.20.2",

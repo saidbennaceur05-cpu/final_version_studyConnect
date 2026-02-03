@@ -15,6 +15,7 @@ dotenv.config();
 
 import './auth.js';
 import meetingsRouter from './routes/meetings.js';
+import { getRecommendations } from './services/recommendations.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,7 +68,7 @@ app.use(async (req: any, _res, next) => {
         data: { lastSeen: new Date() },
       });
     }
-  } catch {}
+  } catch { }
   next();
 });
 
@@ -156,6 +157,22 @@ app.get('/api/stats', async (_req, res) => {
     weekMeetings: week,
     subjectsCount: subjects.length,
   });
+});
+
+// AI-powered recommendations
+app.get('/api/recommendations', async (req: any, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({ ok: false, error: 'Not authenticated' });
+  }
+
+  try {
+    const recommendations = await getRecommendations(user.id);
+    res.json(recommendations);
+  } catch (error) {
+    console.error('[recommendations] Error:', error);
+    res.status(500).json({ ok: false, error: 'Failed to get recommendations' });
+  }
 });
 // ---------- Health ----------
 app.get('/health', (_req, res) => {

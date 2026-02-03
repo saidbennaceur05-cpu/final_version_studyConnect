@@ -1,6 +1,6 @@
-
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,44 +10,295 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --brand:#4f46e5; --brand-2:#7c3aed; --ring:#6366f1; }
-    html,body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol", sans-serif; }
-    .glass { backdrop-filter: saturate(180%) blur(8px); background: rgba(255,255,255,.75); }
-    .icon { width:18px; height:18px; }
-    .btn-primary { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:.5rem; font-weight:600; background:#4f46e5; color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.06); transition:filter .15s, transform .02s; position:relative; }
-    .btn-primary:hover { background:#4338ca; }
-    .btn-primary:active { transform:translateY(1px); }
-    .btn-primary.is-loading { pointer-events:none; opacity:.85; }
-    .btn-primary.is-loading::after{
-      content:""; position:absolute; right:.75rem; top:50%; margin-top:-8px;
-      width:16px; height:16px; border:2px solid #fff; border-top-color:transparent;
-      border-radius:50%; animation:spin .8s linear infinite;
+    :root {
+      --brand: #4f46e5;
+      --brand-2: #7c3aed;
+      --ring: #6366f1;
+      --dark-bg: #1a1b26;
     }
-    @keyframes spin { to { transform:rotate(360deg) } }
-    .btn-outline { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:.5rem; font-weight:600; background:#fff; color:#4338ca; border:1px solid #c7d2fe; }
-    .btn-outline:hover { border-color:#a5b4fc; }
-    .btn-soft { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:.5rem; font-weight:600; background:#eef2ff; color:#4338ca; }
-    .btn-soft:hover { background:#e0e7ff; }
-    .btn-disabled { opacity:.55; cursor:not-allowed; filter:saturate(.6); }
-    .chip { display:inline-flex; align-items:center; border-radius:9999px; padding:.25rem .625rem; font-size:.75rem; font-weight:500; background:#f3f4f6; color:#374151; }
-    .badge { display:inline-flex; align-items:center; border-radius:9999px; padding:.125rem .5rem; font-size:11px; font-weight:700; }
-    .line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+    html,
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    }
+
+    .glass {
+      backdrop-filter: saturate(180%) blur(8px);
+      background: rgba(255, 255, 255, .75);
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 1.25rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      background: #4f46e5;
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .06);
+      transition: all .15s;
+      position: relative;
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary.is-loading {
+      pointer-events: none;
+      opacity: .85;
+    }
+
+    .btn-primary.is-loading::after {
+      content: "";
+      position: absolute;
+      right: .75rem;
+      top: 50%;
+      margin-top: -8px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 1.25rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-outline-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 1rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      background: #fff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+    }
+
+    .btn-outline-dark:hover {
+      border-color: #a5b4fc;
+    }
+
+    .btn-soft {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 1rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      background: #eef2ff;
+      color: #4338ca;
+    }
+
+    .btn-soft:hover {
+      background: #e0e7ff;
+    }
+
+    .btn-disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      filter: saturate(.6);
+    }
+
+    .btn-login {
+      display: inline-flex;
+      align-items: center;
+      padding: .5rem 1.25rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      background: #4f46e5;
+      color: #fff;
+      transition: all .15s;
+    }
+
+    .btn-login:hover {
+      background: #6366f1;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      padding: .25rem .625rem;
+      font-size: .75rem;
+      font-weight: 500;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      padding: .125rem .5rem;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-online {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-inperson {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Hero section with gradient overlay */
+    .hero-section {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.9) 0%, rgba(124, 58, 237, 0.85) 50%, rgba(79, 70, 229, 0.9) 100%),
+        url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80') center/cover no-repeat;
+      min-height: 380px;
+    }
+
+    /* Stats icons */
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #4f46e5;
+      border-radius: 12px;
+      color: #4f46e5;
+      margin: 0 auto 12px;
+    }
+
+    .stat-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Dark navbar */
+    .navbar-dark {
+      background: var(--dark-bg);
+    }
+
+    .navbar-dark .search-input {
+      background: #2a2b3d;
+      border-color: #3a3b4d;
+      color: #fff;
+    }
+
+    .navbar-dark .search-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .navbar-dark .search-input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    /* Filter section */
+    .filter-section {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    .filter-section select {
+      border: 1px solid #e5e7eb;
+      padding: .5rem .75rem;
+      border-radius: .5rem;
+      background: #fff;
+    }
+
+    .filter-section select:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
 
     /* Modal polish */
-    #modalCreate input, #modalCreate textarea{
-      width:100%; border:1px solid #e5e7eb; background:#fff; border-radius:.5rem;
-      padding:.625rem .75rem; transition:box-shadow .15s, border-color .15s;
+    #modalCreate input,
+    #modalCreate textarea {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      border-radius: .5rem;
+      padding: .625rem .75rem;
+      transition: box-shadow .15s, border-color .15s;
     }
-    #modalCreate input:focus, #modalCreate textarea:focus{
-      outline:0; border-color:var(--ring); box-shadow:0 0 0 3px rgba(99,102,241,.15);
+
+    #modalCreate input:focus,
+    #modalCreate textarea:focus {
+      outline: 0;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
     }
-    #modalCreate .hint{font-size:.75rem;color:#6b7280}
+
+    #modalCreate .hint {
+      font-size: .75rem;
+      color: #6b7280
+    }
 
     /* Toasts */
-    .toast-wrap{position:fixed;right:1rem;bottom:1rem;display:grid;gap:.5rem;z-index:60}
-    .toast{background:#111827;color:#fff;padding:.625rem .875rem;border-radius:.5rem;box-shadow:0 10px 20px rgba(0,0,0,.12)}
-    .toast.ok{background:#065f46}
-    .toast.err{background:#7f1d1d}
+    .toast-wrap {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      display: grid;
+      gap: .5rem;
+      z-index: 60
+    }
+
+    .toast {
+      background: #111827;
+      color: #fff;
+      padding: .625rem .875rem;
+      border-radius: .5rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .12)
+    }
+
+    .toast.ok {
+      background: #065f46
+    }
+
+    .toast.err {
+      background: #7f1d1d
+    }
   </style>
 </head>
 
@@ -66,112 +317,132 @@
   </div>
 
   <!-- NAV -->
-  <header class="bg-white/80 backdrop-blur border-b border-gray-100 sticky top-0 z-40">
+  <header class="navbar-dark sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
       <div class="flex items-center gap-3">
         <div class="h-9 w-9 rounded-xl grid place-items-center text-white font-bold"
-             style="background:linear-gradient(135deg,var(--brand),var(--brand-2))">SC</div>
-        <div class="text-lg font-semibold">StudyConnect</div>
+          style="background:linear-gradient(135deg,var(--brand),var(--brand-2))">SC</div>
+        <div class="text-lg font-semibold text-white">StudyConnect</div>
       </div>
 
       <div class="flex-1"></div>
 
-      <div class="hidden lg:block w-[520px]">
+      <div class="hidden lg:block w-[420px]">
         <label class="relative block">
           <input id="searchInput" type="search" placeholder="Search meetings, topics, or subjects..."
-                 class="w-full rounded-md border border-gray-200 pl-10 pr-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            class="search-input w-full rounded-lg border pl-10 pr-3 py-2 focus:outline-none" />
           <svg class="icon absolute left-3 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387-1.414 1.414-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+              d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387-1.414 1.414-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
+              clip-rule="evenodd" />
           </svg>
         </label>
       </div>
 
-      <button id="btnCreateTop" class="btn-primary ml-2">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <a id="loginBtn" href="/auth.html" class="btn-login ml-2">Login</a>
+      <button id="btnCreateTop" class="btn-primary ml-2 hidden">
+        <svg class="icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
         Create Meeting
       </button>
     </div>
   </header>
 
   <!-- HERO -->
-  <section class="relative">
-    <div class="absolute inset-0 -z-10"
-         style="background: radial-gradient(1200px 500px at 20% -10%, #c7d2fe55, transparent),
-                          radial-gradient(1200px 500px at 80% -10%, #ddd6fe66, transparent),
-                          linear-gradient(180deg, #ffffff, #f8fafc);"></div>
-
+  <section class="hero-section relative">
     <div class="max-w-7xl mx-auto px-4">
-      <div class="py-14 lg:py-20 text-center">
-        <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
+      <div class="py-16 lg:py-24 text-center">
+        <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight text-white">
           <span class="block">Connect. Study. Succeed.</span>
         </h1>
-        <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-          Join collaborative study sessions, discover study groups, and excel in your academic journey with fellow students.
+        <p class="mt-5 text-lg text-white/80 max-w-2xl mx-auto">
+          Join collaborative study sessions, discover study groups, and excel in your academic journey with fellow
+          students.
         </p>
 
-        <div class="mt-8 flex items-center justify-center gap-3">
-          <a href="#meetings" class="btn-primary">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M8 7h8M7 11h10M6 15h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="mt-10 flex items-center justify-center gap-4">
+          <a href="#meetings" class="btn-primary text-base px-6 py-3">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
             Browse Meetings
           </a>
-          <button class="btn-outline" id="btnCreateHero">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <button class="btn-outline text-base px-6 py-3" id="btnCreateHero">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
             Create Study Group
           </button>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Stats grid -->
-        <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <!-- Active Students -->
-          <div class="rounded-xl bg-white border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="h-10 w-10 rounded-lg bg-indigo-50 text-indigo-600 grid place-items-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 10-8 0 4 4 0 008 0zM3 20a7 7 0 0114 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-              <div id="statActive" class="text-2xl font-extrabold">0</div>
-              <div class="text-gray-500 text-sm">Active Students</div>
-            </div>
+  <!-- Stats Section -->
+  <section class="bg-white py-12 border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <!-- Active Students -->
+        <div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
           </div>
-          <!-- Study Sessions -->
-          <div class="rounded-xl bg-white border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="h-10 w-10 rounded-lg bg-indigo-50 text-indigo-600 grid place-items-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M8 7h8M7 11h10M6 15h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-              <div id="statUpcoming" class="text-2xl font-extrabold">0</div>
-              <div class="text-gray-500 text-sm">Study Sessions</div>
-            </div>
+          <div id="statActive" class="text-2xl font-bold text-gray-900">1,200+</div>
+          <div class="text-gray-500 text-sm mt-1">Active Students</div>
+        </div>
+        <!-- Study Sessions -->
+        <div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
           </div>
-          <!-- Subjects Covered -->
-          <div class="rounded-xl bg-white border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="h-10 w-10 rounded-lg bg-indigo-50 text-indigo-600 grid place-items-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-              <div id="statSubjects" class="text-2xl font-extrabold">0</div>
-              <div class="text-gray-500 text-sm">Subjects Covered</div>
-            </div>
+          <div id="statUpcoming" class="text-2xl font-bold text-gray-900">350+</div>
+          <div class="text-gray-500 text-sm mt-1">Study Sessions</div>
+        </div>
+        <!-- Subjects Covered -->
+        <div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
           </div>
-          <!-- Total Students -->
-          <div class="rounded-xl bg-white border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="h-10 w-10 rounded-lg bg-indigo-50 text-indigo-600 grid place-items-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4zM3 12l9 4 9-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-              <div id="statUsers" class="text-2xl font-extrabold">0</div>
-              <div class="text-gray-500 text-sm">Total Students</div>
-            </div>
+          <div id="statSubjects" class="text-2xl font-bold text-gray-900">50+</div>
+          <div class="text-gray-500 text-sm mt-1">Subjects Covered</div>
+        </div>
+        <!-- Success Rate -->
+        <div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
           </div>
+          <div id="statUsers" class="text-2xl font-bold text-gray-900">95%</div>
+          <div class="text-gray-500 text-sm mt-1">Success Rate</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- FILTERS -->
-  <section id="meetings" class="max-w-7xl mx-auto px-4">
+  <section id="meetings" class="max-w-7xl mx-auto px-4 mt-8">
     <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 md:p-6">
       <div class="flex items-center gap-2 text-gray-800 font-semibold">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg class="icon" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
         Filter Meetings
       </div>
 
@@ -200,50 +471,218 @@
     </div>
   </section>
 
+  <!-- AI Recommendations Section -->
+  <section id="recommendationsSection" class="max-w-7xl mx-auto px-4 mt-8 hidden">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-900">Recommended for You</h2>
+      <span class="text-xs text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full font-medium">AI-Powered</span>
+    </div>
+    <p class="text-gray-600 text-sm mb-4">Based on your study history and interests</p>
+    <div id="recommendationsCards" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-4"></div>
+    <div id="recommendationsLoading" class="text-center py-8">
+      <div class="inline-flex items-center gap-2 text-gray-500">
+        <svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+        Analyzing your preferences...
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Study Sessions Header -->
+  <section class="max-w-7xl mx-auto px-4 mt-8">
+    <h2 class="text-2xl font-bold text-gray-900">Upcoming Study Sessions</h2>
+    <p class="text-gray-600 mt-1">Discover and join study sessions tailored to your academic level and interests.
+      Connect with fellow students and enhance your learning experience.</p>
+  </section>
+
   <!-- CARDS -->
   <section class="max-w-7xl mx-auto px-4 mt-6 mb-16" id="cardsWrap">
-    <h2 class="sr-only">Upcoming Study Sessions</h2>
     <div id="cards" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
     <div id="empty" class="hidden text-center text-gray-500 py-12">No meetings match your filters.</div>
   </section>
 
   <!-- CREATE MODAL -->
-  <dialog id="modalCreate" class="backdrop:bg-black/40 rounded-lg w-[560px] max-w-[95vw] p-0">
-    <form id="createForm" class="p-6">
-      <div class="text-lg font-semibold">Create Meeting</div>
-      <div class="mt-4 grid md:grid-cols-2 gap-4">
-        <label class="text-sm">Title
-          <input id="fTitle" name="title" required class="w-full mt-1 rounded-md border-gray-200" maxlength="120"/>
-          <span class="hint">Keep it short and clear</span>
-        </label>
-        <label class="text-sm">Subject
-          <input name="subject" class="w-full mt-1 rounded-md border-gray-200"/>
-        </label>
-        <label class="text-sm">Level
-          <input name="level" class="w-full mt-1 rounded-md border-gray-200" placeholder="e.g. L1, 2eme Annee"/>
-        </label>
-        <label class="text-sm">Specialization
-          <input name="specialization" class="w-full mt-1 rounded-md border-gray-200" placeholder="e.g. ISI, ALG"/>
-        </label>
-        <label class="text-sm">Start
-          <input name="startTime" type="datetime-local" required class="w-full mt-1 rounded-md border-gray-200"/>
-          <span class="hint">Meeting will last 1 hour by default</span>
-        </label>
-        <label class="text-sm md:col-span-2">Location
-          <input id="fLocation" name="location" class="w-full mt-1 rounded-md border-gray-200" placeholder="Room or place"/>
-          <span class="hint">Example B-205 Library</span>
-        </label>
-        <label class="text-sm md:col-span-2">Online URL
-          <input id="fOnlineUrl" name="onlineUrl" class="w-full mt-1 rounded-md border-gray-200" placeholder="Zoom/Meet link (optional)"/>
-          <span class="hint">Example https://meet.google.com/abc-defg-hij</span>
-        </label>
-        <label class="text-sm md:col-span-2">Description
-          <textarea name="description" rows="3" class="w-full mt-1 rounded-md border-gray-200"></textarea>
-        </label>
+  <dialog id="modalCreate" class="backdrop:bg-black/60 rounded-2xl w-[600px] max-w-[95vw] p-0 shadow-2xl border-0">
+    <form id="createForm" class="overflow-hidden">
+      <!-- Gradient Header -->
+      <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 px-6 py-5 text-white">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">Create Study Session</h2>
+            <p class="text-white/70 text-sm">Bring students together</p>
+          </div>
+        </div>
       </div>
-      <div class="mt-6 flex justify-end gap-2">
-        <button type="button" class="btn-outline" onclick="modalCreate.close()">Cancel</button>
-        <button id="btnSubmitCreate" class="btn-primary relative">Create</button>
+
+      <!-- Form Content -->
+      <div class="p-6 bg-gray-50">
+        <div class="grid md:grid-cols-2 gap-5">
+          <!-- Title -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-indigo-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+                  <path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Session Title
+              </span>
+            </label>
+            <input id="fTitle" name="title" required maxlength="120"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="e.g. Linear Algebra Review Session" />
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-purple-500" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Subject
+              </span>
+            </label>
+            <input name="subject"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="e.g. Mathematics" />
+          </div>
+
+          <!-- Level -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Academic Level
+              </span>
+            </label>
+            <input name="level"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="e.g. L1, 2ème Année" />
+          </div>
+
+          <!-- Specialization -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Specialization
+              </span>
+            </label>
+            <input name="specialization"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="e.g. Computer Science" />
+          </div>
+
+          <!-- Start Time -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-orange-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Date & Time
+              </span>
+            </label>
+            <input name="startTime" type="datetime-local" required
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all" />
+            <p class="text-xs text-gray-500 mt-1">Duration: 1 hour</p>
+          </div>
+
+          <!-- Location -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-red-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Location
+              </span>
+            </label>
+            <input id="fLocation" name="location"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="e.g. Library Room B-205" />
+          </div>
+
+          <!-- Online URL -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Online Meeting Link
+                <span class="text-gray-400 font-normal">(optional)</span>
+              </span>
+            </label>
+            <input id="fOnlineUrl" name="onlineUrl"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              placeholder="https://meet.google.com/abc-defg-hij" />
+          </div>
+
+          <!-- Description -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                Description
+              </span>
+            </label>
+            <textarea name="description" rows="3"
+              class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all resize-none"
+              placeholder="What will you cover in this session?"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 bg-white border-t border-gray-100 flex justify-end gap-3">
+        <button type="button"
+          class="px-5 py-2.5 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+          onclick="modalCreate.close()">
+          Cancel
+        </button>
+        <button id="btnSubmitCreate"
+          class="btn-primary px-6 py-2.5 rounded-lg font-semibold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+          Create Session
+        </button>
       </div>
     </form>
   </dialog>
@@ -252,8 +691,8 @@
   <div id="toasts" class="toast-wrap"></div>
 
   <script>
-    const qs = (s, el=document) => el.querySelector(s);
-    const qsa = (s, el=document) => [...el.querySelectorAll(s)];
+    const qs = (s, el = document) => el.querySelector(s);
+    const qsa = (s, el = document) => [...el.querySelectorAll(s)];
     const cardsEl = qs('#cards');
     const emptyEl = qs('#empty');
     const searchInput = qs('#searchInput');
@@ -273,7 +712,9 @@
 
       if (res.status === 200) {
         currentUser = await res.json().catch(() => null);
-        qs('#signinBar').classList.add('hidden');
+        // Show Create button, hide Login button when signed in
+        qs('#btnCreateTop').classList.remove('hidden');
+        qs('#loginBtn').classList.add('hidden');
         return true;
       }
 
@@ -283,11 +724,11 @@
     }
 
     // open modal + autofocus title
-    qs('#btnCreateTop').onclick  = () => { modalCreate.showModal(); setTimeout(()=>qs('#fTitle')?.focus(), 40); };
-    qs('#btnCreateHero').onclick = () => { modalCreate.showModal(); setTimeout(()=>qs('#fTitle')?.focus(), 40); };
+    qs('#btnCreateTop').onclick = () => { modalCreate.showModal(); setTimeout(() => qs('#fTitle')?.focus(), 40); };
+    qs('#btnCreateHero').onclick = () => { modalCreate.showModal(); setTimeout(() => qs('#fTitle')?.focus(), 40); };
 
     // Esc to close modal
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modalCreate.open) modalCreate.close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalCreate.open) modalCreate.close(); });
 
     function fmtDate(dt) {
       const d = new Date(dt);
@@ -301,9 +742,10 @@
 
     function renderBadgeType(m) {
       const online = isOnline(m);
-      const c = online ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700';
+      const c = online ? 'badge-online' : 'badge-inperson';
+      const icon = online ? '<svg class="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>' : '';
       const label = online ? 'Online' : 'In-Person';
-      return `<span class="badge ${c}">${label}</span>`;
+      return `<span class="badge ${c}">${icon}${label}</span>`;
     }
 
     function userJoined(m) {
@@ -314,7 +756,7 @@
       if (!currentUser) return false;
       return m.createdById === currentUser.id;
     }
-    function escapeHtml(s){return (s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+    function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])) }
 
     function card(m) {
       const s = fmtDate(m.startTime), e = fmtDate(m.endTime);
@@ -325,7 +767,7 @@
       ].filter(Boolean).join(' ');
 
       const joined = userJoined(m);
-      const owner  = isOwner(m);
+      const owner = isOwner(m);
 
       const actionsHtml = owner
         ? `
@@ -374,8 +816,8 @@
     function fillFilters(items) {
       const levels = [...new Set(items.map(x => x.level).filter(Boolean))].sort();
       const subjects = [...new Set(items.map(x => x.subject).filter(Boolean))].sort();
-      fLevel.innerHTML   = `<option value="">All Levels</option>`   + levels.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
-      fSubject.innerHTML = `<option value="">All Subjects</option>` + subjects.map(v=>`<option>${escapeHtml(v)}</option>`).join('');
+      fLevel.innerHTML = `<option value="">All Levels</option>` + levels.map(v => `<option>${escapeHtml(v)}</option>`).join('');
+      fSubject.innerHTML = `<option value="">All Subjects</option>` + subjects.map(v => `<option>${escapeHtml(v)}</option>`).join('');
     }
 
     function applyFilters() {
@@ -385,9 +827,9 @@
       let list = raw.slice();
       if (q) {
         list = list.filter(x =>
-          (x.title||'').toLowerCase().includes(q) ||
-          (x.description||'').toLowerCase().includes(q) ||
-          (x.subject||'').toLowerCase().includes(q)
+          (x.title || '').toLowerCase().includes(q) ||
+          (x.description || '').toLowerCase().includes(q) ||
+          (x.subject || '').toLowerCase().includes(q)
         );
       }
       if (lv) list = list.filter(x => x.level === lv);
@@ -408,10 +850,10 @@
     // Google Calendar template helpers
     function toGCalDate(dt) {
       const d = new Date(dt);
-      const pad = n => String(n).padStart(2,'0');
+      const pad = n => String(n).padStart(2, '0');
       return (
         d.getUTCFullYear() +
-        pad(d.getUTCMonth()+1) +
+        pad(d.getUTCMonth() + 1) +
         pad(d.getUTCDate()) + 'T' +
         pad(d.getUTCHours()) +
         pad(d.getUTCMinutes()) +
@@ -420,10 +862,10 @@
     }
     function openGCalTemplate(m) {
       const base = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
-      const text    = encodeURIComponent(m.title || 'StudyConnect Meeting');
+      const text = encodeURIComponent(m.title || 'StudyConnect Meeting');
       const details = encodeURIComponent((m.description || '') + '\n- Created via StudyConnect');
-      const location= encodeURIComponent(m.onlineUrl || m.location || '');
-      const dates   = `${toGCalDate(m.startTime)}/${toGCalDate(m.endTime)}`;
+      const location = encodeURIComponent(m.onlineUrl || m.location || '');
+      const dates = `${toGCalDate(m.startTime)}/${toGCalDate(m.endTime)}`;
       const url = `${base}&text=${text}&details=${details}&location=${location}&dates=${dates}`;
       window.open(url, '_blank', 'noopener,noreferrer');
     }
@@ -432,7 +874,7 @@
     async function joinMeeting(id) {
       const btn = document.querySelector(`[data-join-id="${CSS.escape(id)}"]`);
       btn?.classList.add('btn-disabled');
-      btn?.setAttribute('disabled','');
+      btn?.setAttribute('disabled', '');
 
       try {
         const res = await fetch(`/api/meetings/${id}/join`, {
@@ -443,8 +885,8 @@
 
         if (res.status === 401) { window.location.href = '/auth/google'; return; }
 
-        let data = {}; try { data = await res.json(); } catch {}
-        if (!res.ok && data?.note !== 'Already joined') { toast(`Join failed: ${data.error || res.status}`,'err'); return; }
+        let data = {}; try { data = await res.json(); } catch { }
+        if (!res.ok && data?.note !== 'Already joined') { toast(`Join failed: ${data.error || res.status}`, 'err'); return; }
 
         const m = raw.find(x => x.id === id);
         if (m) openGCalTemplate(m);
@@ -473,16 +915,16 @@
 
         if (!res.ok) {
           const text = await res.text().catch(() => '');
-          toast('Delete failed','err');
+          toast('Delete failed', 'err');
           alert('Delete failed. ' + text);
           return;
         }
 
-        toast('Meeting deleted','ok');
+        toast('Meeting deleted', 'ok');
         await fetchMeetings();
         await fetchStats();
       } catch (e) {
-        toast('Delete failed','err');
+        toast('Delete failed', 'err');
       }
     }
 
@@ -504,12 +946,12 @@
     });
 
     // tiny utils
-    function toast(msg,type='ok',ms=2600){
+    function toast(msg, type = 'ok', ms = 2600) {
       const wrap = qs('#toasts'); const el = document.createElement('div');
       el.className = `toast ${type}`; el.textContent = msg; wrap.appendChild(el);
-      setTimeout(()=>{ el.style.opacity='.0'; setTimeout(()=>el.remove(),300); }, ms);
+      setTimeout(() => { el.style.opacity = '.0'; setTimeout(() => el.remove(), 300); }, ms);
     }
-    function isUrl(s){ if(!s) return false; try{ new URL(s); return true } catch { return false } }
+    function isUrl(s) { if (!s) return false; try { new URL(s); return true } catch { return false } }
 
     // Stats
     async function fetchStats() {
@@ -517,11 +959,11 @@
         const r = await fetch('/api/stats', { credentials: 'include' });
         const s = await r.json();
         const n = x => (x >= 1000 ? x.toLocaleString() : String(x));
-        document.getElementById('statActive').textContent   = n(s.activeUsers24h);
+        document.getElementById('statActive').textContent = n(s.activeUsers24h);
         document.getElementById('statUpcoming').textContent = n(s.upcomingMeetings);
         document.getElementById('statSubjects').textContent = n(s.subjectsCount);
-        document.getElementById('statUsers').textContent    = n(s.totalUsers);
-      } catch {}
+        document.getElementById('statUsers').textContent = n(s.totalUsers);
+      } catch { }
     }
 
     // Create meeting with spinner + validation
@@ -532,7 +974,7 @@
       const payload = Object.fromEntries(fd.entries());
 
       if (payload.onlineUrl && !isUrl(payload.onlineUrl.trim())) {
-        toast('Please enter a valid online link','err'); return;
+        toast('Please enter a valid online link', 'err'); return;
       }
 
       if (payload.startTime) {
@@ -548,26 +990,26 @@
         const res = await fetch('/api/meetings', {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type':'application/json' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
         if (res.status === 201) {
           modalCreate.close();
           createForm.reset();
-          toast('Meeting created','ok');
+          toast('Meeting created', 'ok');
           await fetchMeetings();
           await fetchStats();
         } else if (res.status === 400) {
-          const j = await res.json().catch(()=>null);
-          toast('Validation failed','err');
+          const j = await res.json().catch(() => null);
+          toast('Validation failed', 'err');
           alert('Validation failed:\n' + JSON.stringify(j, null, 2));
         } else if (res.status === 401) {
-          toast('Sign in required','err');
+          toast('Sign in required', 'err');
           location.href = '/auth/google';
         } else {
-          const text = await res.text().catch(()=> '');
-          toast('Create failed','err');
+          const text = await res.text().catch(() => '');
+          toast('Create failed', 'err');
           alert('Create failed. ' + text);
         }
       } finally {
@@ -576,15 +1018,76 @@
     };
 
     // Filters & search
-    [searchInput,fLevel,fSubject,fType].forEach(el=>el?.addEventListener('input', applyFilters));
+    [searchInput, fLevel, fSubject, fType].forEach(el => el?.addEventListener('input', applyFilters));
+
+    // AI Recommendations
+    async function fetchRecommendations() {
+      const section = qs('#recommendationsSection');
+      const cardsContainer = qs('#recommendationsCards');
+      const loading = qs('#recommendationsLoading');
+
+      if (!currentUser) return;
+
+      try {
+        section.classList.remove('hidden');
+        const res = await fetch('/api/recommendations', { credentials: 'include' });
+
+        if (!res.ok) {
+          section.classList.add('hidden');
+          return;
+        }
+
+        const recommendations = await res.json();
+        loading.classList.add('hidden');
+
+        if (recommendations.length === 0) {
+          cardsContainer.innerHTML = '<p class="text-gray-500 col-span-full">Join a few sessions to get personalized recommendations!</p>';
+          return;
+        }
+
+        cardsContainer.innerHTML = recommendations.map(rec => {
+          const m = rec.meeting;
+          const s = fmtDate(m.startTime);
+          const online = m.onlineUrl || !m.location;
+          const badgeClass = online ? 'badge-online' : 'badge-inperson';
+          const badgeLabel = online ? 'Online' : 'In-Person';
+
+          return `
+            <div class="rounded-xl bg-gradient-to-br from-white to-indigo-50/30 border border-indigo-100 shadow-sm p-4 flex flex-col">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="text-base font-semibold line-clamp-2">${escapeHtml(m.title)}</h3>
+                <span class="badge ${badgeClass} text-xs shrink-0">${badgeLabel}</span>
+              </div>
+              <p class="mt-1 text-xs text-gray-600 line-clamp-2">${escapeHtml(m.description || '')}</p>
+              <div class="mt-2 text-xs text-gray-500">
+                <span>${s.date}</span> • <span>${s.time}</span>
+              </div>
+              <div class="mt-2 flex items-center gap-1 text-xs text-indigo-600">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>${escapeHtml(rec.reason)}</span>
+              </div>
+              <div class="mt-auto pt-3">
+                <button class="btn-primary w-full text-sm py-2" data-join-id="${m.id}">Join Session</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('[recommendations] Error:', error);
+        section.classList.add('hidden');
+      }
+    }
 
     // init
-    (async function init(){
+    (async function init() {
       await checkAuth();
       await Promise.all([fetchMeetings(), fetchStats()]);
+      fetchRecommendations(); // Load AI recommendations
       setInterval(fetchStats, 60_000);
     })();
   </script>
 
 </body>
+
 </html>
