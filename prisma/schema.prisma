@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -64,6 +64,6 @@ model MeetingAttendee {
 model Session {
   id        String   @id
   sid       String   @unique
-  data      String @db.Text
+  data      String // <— no @db.Text on SQLite
   expiresAt DateTime
 }
