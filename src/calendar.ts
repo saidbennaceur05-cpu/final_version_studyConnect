@@ -161,3 +161,43 @@ export async function deleteGoogleEventWithFallback(params: {
     // ignore cleanup errors
   }
 }
+
+/**
+ * Add an attendee to a Google Calendar event.
+ */
+export async function addAttendeeToGoogleEvent(
+  creatorRefreshToken: string,
+  eventId: string,
+  attendeeEmail: string
+): Promise<void> {
+  const calendar = google.calendar({
+    version: 'v3',
+    auth: makeOAuth2Client(creatorRefreshToken),
+  });
+
+  try {
+    // 1. Get current event
+    const event = await calendar.events.get({
+      calendarId: 'primary',
+      eventId: eventId,
+    });
+
+    const attendees = event.data.attendees || [];
+
+    // 2. Check if already there
+    if (attendees.some(a => a.email === attendeeEmail)) return;
+
+    // 3. Add new attendee
+    attendees.push({ email: attendeeEmail });
+
+    // 4. Patch event
+    await calendar.events.patch({
+      calendarId: 'primary',
+      eventId: eventId,
+      requestBody: { attendees },
+      sendUpdates: 'all',
+    });
+  } catch (e: any) {
+    if (e?.code !== 404 && e?.code !== 410) throw e;
+  }
+}

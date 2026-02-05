@@ -889,7 +889,7 @@
         if (!res.ok && data?.note !== 'Already joined') { toast(`Join failed: ${data.error || res.status}`, 'err'); return; }
 
         const m = raw.find(x => x.id === id);
-        if (m) openGCalTemplate(m);
+        // if (m) openGCalTemplate(m); // REDUNDANT: now handled by backend adding attendee
 
         await fetchMeetings();
         await fetchStats();

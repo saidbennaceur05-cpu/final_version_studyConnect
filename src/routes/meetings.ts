@@ -5,6 +5,7 @@ import {
   createCalendarEventForMeeting,
   deleteGoogleEventWithFallback,
   updateGoogleEvent,
+  addAttendeeToGoogleEvent,
 } from '../calendar.js';
 import { validate } from '../middlewares/validate.js';
 import { CreateMeetingSchema, PatchMeetingSchema } from '../validation/meeting.js';
@@ -192,6 +193,7 @@ r.post('/:id/join', requireAuth, async (req: any, res) => {
 
   const meeting = await prisma.meeting.findUnique({
     where: { id },
+    include: { createdBy: { select: { refreshToken: true } } },
   });
 
   if (!meeting) {
@@ -207,6 +209,20 @@ r.post('/:id/join', requireAuth, async (req: any, res) => {
     const join = await prisma.meetingAttendee.create({
       data: { meetingId: id, userId: req.user.id, status: 'going' },
     });
+
+    // Best effort Google Calendar sync: add joiner as attendee
+    if (meeting.googleEventId && meeting.createdBy?.refreshToken && req.user.email) {
+      try {
+        await addAttendeeToGoogleEvent(
+          meeting.createdBy.refreshToken,
+          meeting.googleEventId,
+          req.user.email
+        );
+      } catch (e) {
+        console.warn('[calendar] join sync failed:', e);
+      }
+    }
+
     res.json(join);
   } catch (e: any) {
     if (e?.code === 'P2002') return res.status(200).json({ ok: true, note: 'Already joined' });
