@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run build:css -- --watch & tsx src/index.ts",
-    "build": "npm run build:css && tsc",
+    "build": "npm run build:css && prisma generate && tsc",
     "build:css": "tailwindcss -i ./src/input.css -o ./public/dist/style.css --minify",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
