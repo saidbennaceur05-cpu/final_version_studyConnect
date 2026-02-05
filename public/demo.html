@@ -933,18 +933,23 @@
 
     // Join + open template
     async function joinMeeting(id) {
-      const btn = document.querySelector(`[data-join-id="${CSS.escape(id)}"]`);
-      const m = raw.find(x => x.id === id);
-      let payload = {};
+      if (!currentUser) {
+        toast('Please login to join meetings', 'err');
+        setTimeout(() => location.href = '/auth/google', 1000);
+        return;
+      }
 
-      if (m?.isPrivate) {
+      const m = raw.find(x => x.id === id);
+      if (!m) return;
+
+      let payload = {};
+      if (m.isPrivate) {
         const pass = prompt('This meeting is private. Please enter the password to join:');
-        if (pass === null) return; // cancelled
+        if (pass === null) return;
         payload.password = pass;
       }
 
-      btn?.classList.add('btn-disabled');
-      btn?.setAttribute('disabled', '');
+      toast('Joining session...', 'ok', 1000);
 
       try {
         const res = await fetch(`/api/meetings/${id}/join`, {
@@ -954,19 +959,26 @@
           body: JSON.stringify(payload)
         });
 
-        if (res.status === 401) { window.location.href = '/auth/google'; return; }
+        if (res.status === 401) { location.href = '/auth/google'; return; }
 
-        let data = {}; try { data = await res.json(); } catch { }
-        if (!res.ok && data?.note !== 'Already joined') { toast(`Join failed: ${data.error || res.status}`, 'err'); return; }
+        const data = await res.json().catch(() => ({}));
 
-        const m = raw.find(x => x.id === id);
-        // if (m) openGCalTemplate(m); // REDUNDANT: now handled by backend adding attendee
+        if (!res.ok) {
+          if (data.note === 'Already joined') {
+            toast('You are already in this session', 'ok');
+          } else {
+            toast(data.error || 'Join failed', 'err');
+            return;
+          }
+        } else {
+          toast('Successfully joined! 📅', 'ok');
+        }
 
         await fetchMeetings();
         await fetchStats();
-      } finally {
-        btn?.classList.remove('btn-disabled');
-        btn?.removeAttribute('disabled');
+      } catch (e) {
+        console.error('[join] Error:', e);
+        toast('Connection error', 'err');
       }
     }
 
