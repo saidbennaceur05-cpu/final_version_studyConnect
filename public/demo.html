@@ -625,16 +625,16 @@
             <!-- Password Input (Hidden by default) -->
             <div id="passwordWrapper" class="hidden animate-in fade-in duration-300">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Set Meeting Password</label>
-              <div class="relative">
-                <input type="password" name="password" id="fPassword" placeholder="Enter password..."
-                  class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all pl-12" />
-                <div
-                  class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center justify-center">
+              <div class="relative flex items-center">
+                <div class="absolute left-4 z-10 text-gray-400 pointer-events-none flex items-center justify-center">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0110 0v4" />
                   </svg>
                 </div>
+                <input type="password" name="password" id="fPassword" placeholder="Enter password..."
+                  style="padding-left: 3.5rem !important;"
+                  class="w-full rounded-lg border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all" />
               </div>
             </div>
           </div>
