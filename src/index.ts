@@ -98,7 +98,7 @@ app.get('/auth/google/callback', (req, res, next) => {
     if (!user) return res.redirect('/auth/failure');
     (req as any).logIn(user, (err2: any) => {
       if (err2) return next(err2);
-      req.session.save(() => res.redirect('/auth/success'));
+      req.session.save(() => res.redirect('/'));
     });
   })(req, res, next);
 });
