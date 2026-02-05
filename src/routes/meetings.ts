@@ -77,6 +77,8 @@ r.post('/', requireAuth, validate(CreateMeetingSchema), async (req: any, res) =>
     endTime,
     location,
     onlineUrl,
+    isPrivate,
+    password,
   } = req.body;
 
   const meeting = await prisma.meeting.create({
@@ -90,6 +92,8 @@ r.post('/', requireAuth, validate(CreateMeetingSchema), async (req: any, res) =>
       endTime: new Date(endTime),
       location,
       onlineUrl,
+      isPrivate,
+      password,
       createdById: req.user.id,
     },
   });
@@ -140,6 +144,8 @@ r.patch('/:id', requireAuth, validate(PatchMeetingSchema), async (req: any, res)
     endTime,
     location,
     onlineUrl,
+    isPrivate,
+    password,
   } = req.body;
 
   const meeting = await prisma.meeting.findUnique({
@@ -164,6 +170,8 @@ r.patch('/:id', requireAuth, validate(PatchMeetingSchema), async (req: any, res)
       ...(endTime ? { endTime: new Date(endTime) } : {}),
       ...(location !== undefined ? { location } : {}),
       ...(onlineUrl !== undefined ? { onlineUrl } : {}),
+      ...(isPrivate !== undefined ? { isPrivate } : {}),
+      ...(password !== undefined ? { password } : {}),
     },
     include: { attendees: true, createdBy: true },
   });
@@ -203,6 +211,14 @@ r.post('/:id/join', requireAuth, async (req: any, res) => {
   const now = new Date();
   if (meeting.endTime <= now) {
     return res.status(400).json({ ok: false, error: 'Meeting already ended' });
+  }
+
+  // Password check for private meetings
+  if (meeting.isPrivate && meeting.password) {
+    const { password } = req.body;
+    if (password !== meeting.password) {
+      return res.status(403).json({ ok: false, error: 'Incorrect password' });
+    }
   }
 
   try {

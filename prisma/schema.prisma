@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -42,6 +42,8 @@ model Meeting {
   createdBy      User              @relation("MeetingsCreated", fields: [createdById], references: [id])
   attendees      MeetingAttendee[]
   googleEventId  String? // event id in creator calendar
+  isPrivate      Boolean           @default(false)
+  password       String?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 

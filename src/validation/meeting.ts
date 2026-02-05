@@ -12,6 +12,8 @@ export const CreateMeetingSchema = z.object({
   endTime: iso,
   location: z.string().optional().nullable(),
   onlineUrl: z.string().optional().nullable(),
+  isPrivate: z.boolean().optional().default(false),
+  password: z.string().optional().nullable(),
 }).refine(v => new Date(v.endTime).getTime() > new Date(v.startTime).getTime(), {
   message: 'endTime must be after startTime',
   path: ['endTime'],
@@ -27,6 +29,8 @@ export const PatchMeetingSchema = z.object({
   endTime: iso.optional(),
   location: z.string().optional().nullable(),
   onlineUrl: z.string().optional().nullable(),
+  isPrivate: z.boolean().optional(),
+  password: z.string().optional().nullable(),
 }).refine(v => {
   if (v.startTime && v.endTime) {
     return new Date(v.endTime).getTime() > new Date(v.startTime).getTime();
