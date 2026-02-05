@@ -1041,6 +1041,9 @@
       const fd = new FormData(createForm);
       const payload = Object.fromEntries(fd.entries());
 
+      // Convert checkbox string "on" to boolean for backend validation
+      payload.isPrivate = fd.get('isPrivate') === 'on';
+
       if (payload.onlineUrl && !isUrl(payload.onlineUrl.trim())) {
         toast('Please enter a valid online link', 'err'); return;
       }
